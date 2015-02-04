@@ -15,7 +15,7 @@ server = busterServer.create(undefined, undefined, {});
 sandbox.stub(server, "run");
 sandbox.stub(busterServer, "create").returns(server);
 
-proxyquire("../../lib/server/process", {
+proxyquire("../../lib/process/server-cli", {
     "buster-server-cli": busterServer
 });
 

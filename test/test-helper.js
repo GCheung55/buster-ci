@@ -8,20 +8,23 @@ var buster = require("buster"),
     proxyquire = require("proxyquire"),
     EventEmitter = require("events").EventEmitter,
     AgentStub = buster.sinon.stub(),
-    busterTestCli = {},
+    // busterTestCli = {},
     faye = {},
-    fs = {},
+    // fs = {},
     childProcessStub = buster.sinon.stub(),
     childProcessForkMock = new EventEmitter(),
-    Server = proxyquire("../lib/server", {
+    ServerCli = proxyquire("../lib/server-cli", {
+        "child_process": ChildProcess
+    }),
+    TestCli = proxyquire("../lib/test-cli", {
         "child_process": ChildProcess
     }),
     BusterCi = proxyquire("../lib/buster-ci", {
-        "./server": Server,
+        "./server-cli": ServerCli,
         "buster-ci-agent": AgentStub,
-        "buster-test-cli": busterTestCli,
+        "./test-cli": TestCli,
         "faye": faye,
-        "fs": fs,
+        // "fs": fs,
         "child_process": ChildProcess
     }),
     sandbox;
@@ -49,9 +52,9 @@ function stubChildProcess() {
 }
 
 function stubServer() {
-    var server = Server.create();
+    var server = ServerCli.create();
     sandbox.stub(server, "run");
-    sandbox.stub(Server, "create").returns(server);
+    sandbox.stub(ServerCli, "create").returns(server);
     
     return server;
 }
@@ -156,12 +159,13 @@ function stubServerFayeClient(url, slaveIds) {
 
 function stubTestCli() {
 
-    var testCli = busterTestCli.create(undefined, undefined, {});
+    var testCli = TestCli.create({});
     sandbox.stub(testCli, "run");
-    sandbox.stub(testCli, "exit", function (exitCode, callback) {
-        callback(exitCode);
-    });
-    sandbox.stub(busterTestCli, "create").returns(testCli);
+    // sandbox.stub(testCli, "exit", function (exitCode, callback) {
+    //     callback(exitCode);
+    // });
+    sandbox.stub(testCli, "exit");
+    sandbox.stub(TestCli, "create").returns(testCli);
     
     return testCli;
 }
@@ -171,9 +175,9 @@ module.exports = {
     
     AgentStub: AgentStub,
     BusterCi: BusterCi,
-    busterServer: Server,
+    busterServer: ServerCli,
     faye: faye,
-    fs: fs,
+    // fs: fs,
     childProcessStub: childProcessStub,
     childProcessForkMock: childProcessForkMock,
     ChildProcess: ChildProcess,
@@ -191,7 +195,7 @@ module.exports = {
         this.testCli = stubTestCli.call(this);
         this.testCli.run.callsArg(1);
         sandbox.stub(faye, "Client");
-        sandbox.stub(fs, "createWriteStream");
+        // sandbox.stub(fs, "createWriteStream");
     },
     
     tearDown: function () {

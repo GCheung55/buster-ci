@@ -565,7 +565,7 @@ buster.testCase("buster-ci", {
         new BusterCi(this.config).run();
     },
 
-    "errors if not all browsers are closed after 30s": function () {
+    "=> errors if not all browsers are closed after 30s": function () {
         this.clock = this.useFakeTimers();
         th.fixSinon();
         this.fayeClientServer.slaveDeathMessages.splice(2, 2);
@@ -618,7 +618,7 @@ buster.testCase("buster-ci", {
         }));
     },
 
-    "writes reporter output to file if configured": function (done) {
+    "// writes reporter output to file if configured": function (done) {
 
         this.config["outputFile"] = "path/to/xml/output/file";
         var fileOutputStream = {};
@@ -632,7 +632,7 @@ buster.testCase("buster-ci", {
         }.bind(this)));
     },
 
-    "writes reporter output to stdout if no output file is configured":
+    "// writes reporter output to stdout if no output file is configured":
         function (done) {
 
             new BusterCi(this.config).run([], done(function () {

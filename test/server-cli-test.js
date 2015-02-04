@@ -5,7 +5,7 @@ var buster = require("buster"),
     EventEmitter = require("events").EventEmitter,
     ChildProcess = require("child_process"),
     proxyquire = require("proxyquire"),
-    Server = proxyquire("../lib/server", {
+    Server = proxyquire("../lib/server-cli", {
         "child_process": ChildProcess
     }),
     assert = buster.assert,
